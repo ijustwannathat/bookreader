@@ -4,7 +4,6 @@ from .models import Book
 
 
 class BookSeriazlier(serializers.ModelSerializer):
-
     file = serializers.FileField(required=False, allow_null=True)
 
     class Meta:
