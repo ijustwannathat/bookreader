@@ -1,0 +1,8 @@
+asgiref==3.8.1
+Django==5.2.3
+djangorestframework==3.16.0
+EbookLib==0.19
+lxml==5.4.0
+python-dotenv==1.1.1
+six==1.17.0
+sqlparse==0.5.3
