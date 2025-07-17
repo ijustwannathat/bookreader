@@ -17,7 +17,7 @@ class BookView(generics.ListCreateAPIView):
     permission_classes = [IsAuthor]
     parser_classes = [MultiPartParser, FormParser]
 
-    # ah sorry didnt want to write viewsets so gotta copy paste, such a simple logic does not need routers anyways
+    # ah sorry didnt want to write viewsets so gotta copy paste, such a simple logic does not need routers anyways 
     # TODO: write a viewset and set the router up
     def perform_create(self, serializer):
         file: InMemoryUploadedFile = self.request.FILES.get("file")
