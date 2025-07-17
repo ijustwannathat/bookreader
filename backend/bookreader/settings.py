@@ -1,6 +1,7 @@
 import os
 from pathlib import Path
 
+from django.utils import timezone
 from dotenv import load_dotenv
 
 load_dotenv()
@@ -110,7 +111,7 @@ AUTH_PASSWORD_VALIDATORS = [
 
 LANGUAGE_CODE = "en-us"
 
-TIME_ZONE = 'Europe/Berlin'
+TIME_ZONE = timezone.get_current_timezone().key
 
 USE_I18N = True
 
