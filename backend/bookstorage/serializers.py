@@ -23,6 +23,7 @@ class BookSeriazlier(serializers.ModelSerializer):
     def create(self, validated_data):
         user = self.context["request"].user
         validated_data["added_by"] = user
+        print(validated_data)
         return super().create(validated_data)
 
 
@@ -30,5 +31,3 @@ class BookUserSerializer(BookSeriazlier):
     class Meta:
         model = Book
         exclude = ("added_by",)
-
-

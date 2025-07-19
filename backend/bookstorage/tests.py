@@ -1,7 +1,9 @@
-from django.test import TestCase
-from bookstorage.models import Book
 import os
+
+from django.test import TestCase
 from ebooklib import epub
+
+from bookstorage.models import Book
 
 path = '/home/yuriypazirovych/Documents/Books/Development/Django/progit.epub'
 
