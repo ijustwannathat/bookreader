@@ -16,15 +16,15 @@ class BookView(generics.ListCreateAPIView):
 
     # ah sorry didnt want to write viewsets so gotta copy paste, such a simple logic does not need routers anyways
     # TODO: write a viewset and set the router up
-    def perform_create(self, serializer):
-        file = self.request.FILES.get("file")
-
-        if file:
-            instance = EpubHandler(file=file)
-            handled_data = instance.handle_file()
-            serializer.save(**handled_data)
-        else:
-            serializer.save(added_by=self.request.user)
+    # def perform_create(self, serializer):
+        # file = self.request.FILES.get("file")
+        #
+        # if file:
+        #     instance = EpubHandler(file=file)
+        #     handled_data = instance.handle_file()
+        #     serializer.save(**handled_data)
+        # else:
+        # serializer.save(added_by=self.request.user)
 
 
 class BookDetailView(generics.RetrieveUpdateDestroyAPIView):

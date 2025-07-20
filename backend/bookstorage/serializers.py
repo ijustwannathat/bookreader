@@ -1,5 +1,6 @@
 from rest_framework import serializers
 
+from .handlers import EpubHandler
 from .models import Book
 
 
@@ -23,7 +24,12 @@ class BookSeriazlier(serializers.ModelSerializer):
     def create(self, validated_data):
         user = self.context["request"].user
         validated_data["added_by"] = user
-        print(validated_data)
+        file = validated_data.get("file")
+        if file:
+            instance = EpubHandler(file=file)
+            handled_data = instance.handle_file()
+            validated_data.update(handled_data)
+
         return super().create(validated_data)
 
 
