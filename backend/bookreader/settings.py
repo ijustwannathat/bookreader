@@ -17,7 +17,7 @@ SECRET_KEY = os.getenv("django_security_key")
 # if you want to make yo life harder run debug in production
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ["127.0.0.1", "localhost"]
 
 
 INSTALLED_APPS = [
@@ -29,6 +29,7 @@ INSTALLED_APPS = [
     "django.contrib.staticfiles",
     # third party packages
     "rest_framework",
+    "corsheaders",
     # apps
     "bookstorage",
     "accounts",
@@ -44,9 +45,13 @@ MIDDLEWARE = [
     "django.contrib.auth.middleware.AuthenticationMiddleware",
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
+    # third party middleware
+    "corsheaders.middleware.CorsMiddleware",
+    # project middleware
+    "bookstorage.middleware.FiletypeHandlerMiddleware",
 ]
 
-# basic authentication 
+# basic authentication
 REST_FRAMEWORK = {
     "DEFAULT_AUTHENTICATION_CLASSES": [
         "rest_framework.authentication.BasicAuthentication",
@@ -56,8 +61,8 @@ REST_FRAMEWORK = {
 
 # UNSURE IF IT WORKS XDDDD
 REST_AUTH_SERIALALIZER = {
-        'USER_DETAIL_SERIALIZER': 'bookreader.serializers.UserSerializer'
-        }
+    "USER_DETAIL_SERIALIZER": "bookreader.serializers.UserSerializer"
+}
 
 ROOT_URLCONF = "bookreader.urls"
 
@@ -130,3 +135,4 @@ MEDIA_ROOT = BASE_DIR / "media"
 
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 AUTH_USER_MODEL = "accounts.User"
+CORS_ALLOW_ALL_ORIGINS = True
