@@ -1,4 +1,3 @@
-import gc
 import hashlib
 import os
 import random
@@ -6,9 +5,6 @@ import re
 import tempfile
 
 import magic
-from django.conf import settings
-from django.core.files.storage import FileSystemStorage
-from django.core.files.uploadedfile import InMemoryUploadedFile, TemporaryUploadedFile
 from django.test.client import BaseHandler
 from ebooklib import epub
 from ebooklib.epub import EpubBook
@@ -16,12 +12,11 @@ from ebooklib.epub import EpubBook
 
 # im gonna rewrite that someday i promise
 class EpubHandler:
-    def __init__(self, file, user_instance) -> None:
+    def __init__(self, file) -> None:
         # it accepts only
         # <class 'django.core.files.uploadedfile.InMemoryUploadedFile'> type
 
         self.file = file
-        self.user_instance = user_instance
 
     def generate_field_hash(self, field):
         """
@@ -101,44 +96,44 @@ class EpubHandler:
 
             book = epub.read_epub(read_file)
 
-            title = self.get_epub_field(
-                book,
-                namespace="DC",
-                field="title",
-                set_default=True,
-                default_hasher=self.generate_field_hash,
-            )
-            author = self.get_epub_field(
-                book,
-                namespace="DC",
-                field="creator",
-                default="Unknown",
-            )
-            description = self.get_epub_field(
-                book,
-                namespace="DC",
-                field="description",
-            )
-            language = self.get_epub_field(
-                book,
-                namespace="DC",
-                field="language",
-            )
-            identifier = self.get_epub_field(
-                book,
-                namespace="DC",
-                field="identifier",
-            )
-            format = self.get_filextension(self.file)
+        title = self.get_epub_field(
+            book,
+            namespace="DC",
+            field="title",
+            set_default=True,
+            default_hasher=self.generate_field_hash,
+        )
+        author = self.get_epub_field(
+            book,
+            namespace="DC",
+            field="creator",
+            default="Unknown",
+        )
+        description = self.get_epub_field(
+            book,
+            namespace="DC",
+            field="description",
+        )
+        language = self.get_epub_field(
+            book,
+            namespace="DC",
+            field="language",
+        )
+        identifier = self.get_epub_field(
+            book,
+            namespace="DC",
+            field="identifier",
+        )
+        format = self.get_filextension(self.file)
 
-            metadata = {
-                "title": title,
-                "author": author,
-                "description": description,
-                "language": language,
-                "identifier": identifier,
-                "format": format,
-                "rating": 5,
-            }
+        metadata = {
+            "title": title,
+            "author": author,
+            "description": description,
+            "language": language,
+            "identifier": identifier,
+            "format": format,
+            "rating": 5,
+        }
 
         return metadata

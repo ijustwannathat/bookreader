@@ -40,7 +40,7 @@ class BookSeriazlier(serializers.ModelSerializer):
         # logic is now handled by serializers since it may be easier to test import
         # also views are now do views stuff(maybe)
         if file:
-            instance = EpubHandler(file=file, user_instance=user)
+            instance = EpubHandler(file=file)
             handled_data = instance.handle_file()
             validated_data.update(handled_data)
 
