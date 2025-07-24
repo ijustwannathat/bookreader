@@ -15,6 +15,11 @@ class BookView(generics.ListCreateAPIView):
     # permission_classes = [IsAuthor]
     parser_classes = [MultiPartParser, FormParser]
 
+    def post(self, request, *args, **kwargs):
+        data = super().post(request, *args, **kwargs)
+        print(data.data)
+        return data
+
     # TOFIX: with planned filtering and stuff this shit definitely needs a router
     # def perform_create(self, serializer):
     # file = self.request.FILES.get("file")

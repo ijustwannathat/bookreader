@@ -1,3 +1,4 @@
+import datetime
 import os
 from pathlib import Path
 
@@ -30,9 +31,11 @@ INSTALLED_APPS = [
     # third party packages
     "rest_framework",
     "corsheaders",
+    "rest_framework_simplejwt",
+    'django_cleanup.apps.CleanupConfig',
     # apps
-    "bookstorage",
-    "accounts",
+    "bookstorage.apps.BookstorageConfig",
+    "accounts.apps.AccountsConfig",
 ]
 
 # TODO: not priority rn, custom middleware for sorting out specific files for user needed
@@ -56,13 +59,22 @@ REST_FRAMEWORK = {
     "DEFAULT_AUTHENTICATION_CLASSES": [
         "rest_framework.authentication.BasicAuthentication",
         "rest_framework.authentication.SessionAuthentication",
-    ]
+        "rest_framework_simplejwt.authentication.JWTAuthentication",
+    ],
+    "DEFAULT_PAGINATION_CLASS": "rest_framework.pagination.LimitOffsetPagination",
+    "PAGE_SIZE": 12,
 }
 
 # UNSURE IF IT WORKS XDDDD
 REST_AUTH_SERIALALIZER = {
-    "USER_DETAIL_SERIALIZER": "bookreader.serializers.UserSerializer"
+    "USER_DETAIL_SERIALIZER": "bookreader.serializers.UserSerializer",
 }
+
+SIMPLE_JWT = {
+    "ACCESS_TOKEN_LIFETIME": datetime.timedelta(days=15),
+    "REFRESH_TOKEN_LIFETIME": datetime.timedelta(days=15),
+}
+
 
 ROOT_URLCONF = "bookreader.urls"
 
@@ -129,6 +141,7 @@ USE_TZ = True
 STATIC_URL = "static/"
 MEDIA_URL = "media/"
 MEDIA_ROOT = BASE_DIR / "media"
+SESSION_FILE_PATH = '/home/yuriypazirovych/Documents/bookcache/'
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.2/ref/settings/#default-auto-field

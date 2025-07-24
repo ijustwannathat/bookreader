@@ -10,6 +10,17 @@ class BookSeriazlier(serializers.ModelSerializer):
     class Meta:
         model = Book
         fields = "__all__"
+        read_only_fields = [
+            "title",
+            "author",
+            "description",
+            "language",
+            "identifier",
+            "date_added",
+            "rating",
+            "added_by",
+            "format",
+        ]
 
     def validate_file(self, file):
         if file:
@@ -25,8 +36,11 @@ class BookSeriazlier(serializers.ModelSerializer):
         user = self.context["request"].user
         validated_data["added_by"] = user
         file = validated_data.get("file")
+
+        # logic is now handled by serializers since it may be easier to test import
+        # also views are now do views stuff(maybe)
         if file:
-            instance = EpubHandler(file=file)
+            instance = EpubHandler(file=file, user_instance=user)
             handled_data = instance.handle_file()
             validated_data.update(handled_data)
 
