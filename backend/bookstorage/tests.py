@@ -1,5 +1,6 @@
 import os
 import shutil
+from collections import Counter
 
 from django.conf import settings
 from django.core.files.uploadedfile import SimpleUploadedFile
@@ -7,6 +8,8 @@ from django.urls import reverse
 from rest_framework.test import APITestCase
 
 from accounts.models import User, get_token_for_user
+
+from .handlers import EpubHandler
 
 path = "books/"
 
@@ -41,9 +44,6 @@ class TestBook(APITestCase):
                     name=os.path.basename(filepath),
                     content_type="epub+zip",
                 ),
-                "title": "1",
-                "author": "1",
-                "format": "epub",
             },
             headers={"Authorization": f"Bearer {token}"},
         )
@@ -54,12 +54,12 @@ class TestBook(APITestCase):
         files = os.listdir(path)
         for file in files:
             response = self.upload_file(filepath=path + file, token=self.token)
-            print(response.status_code)
+            print(response)
+
         else:
             print(
                 "----------------------------------------------------------------------"
             )
-            print()
         print(f"Run {len(files)} files. OK")
 
     def tearDown(self):

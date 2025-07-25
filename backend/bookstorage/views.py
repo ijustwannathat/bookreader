@@ -1,39 +1,54 @@
+import pprint
+
+from ebooklib.epub import EpubException
 from rest_framework import generics
 from rest_framework.parsers import FormParser, MultiPartParser
+from rest_framework.views import Response
 
 from accounts.permissions import IsAuthor
 
-from .handlers import EpubHandler
 from .models import Book
-from .serializers import BookSeriazlier
+from .serializers import BookDetailSerializer, BookSeriazlier
 
 
 class BookView(generics.ListCreateAPIView):
     queryset = Book.objects.all()
     serializer_class = BookSeriazlier
     # temporary measure that as i thought would work for basic logic, i didnt focus on writing permissions explicitly
-    # permission_classes = [IsAuthor]
     parser_classes = [MultiPartParser, FormParser]
 
-    def post(self, request, *args, **kwargs):
-        data = super().post(request, *args, **kwargs)
-        print(data.data)
-        return data
+    def get_queryset(self):
+        user = self.request.user
 
-    # TOFIX: with planned filtering and stuff this shit definitely needs a router
-    # def perform_create(self, serializer):
-    # file = self.request.FILES.get("file")
-    #
-    # if file:
-    #     instance = EpubHandler(file=file)
-    #     handled_data = instance.handle_file()
-    #     serializer.save(**handled_data)
-    # else:
-    # serializer.save(added_by=self.request.user)
+        return (
+            super().get_queryset()
+            if user.is_staff
+            else super().get_queryset().filter(added_by=user.id)
+        )
+
+    def post(self, request, *args, **kwargs):
+        try:
+
+            data = super().post(request, *args, **kwargs)
+            return data
+        except EpubException as e:
+            return Response(
+                {
+                    "Error": "During filehandling an error occured, the file may be corrupted. "
+                    + "Try reinstalling the file, because it might've gotten damage during downloading. "
+                    + "Try converting to other formats if it didn't help or try contacting us directly.",
+                    "Error message": e.with_traceback(None).msg,
+                }
+            )
 
 
 class BookDetailView(generics.RetrieveUpdateDestroyAPIView):
     queryset = Book.objects.all()
-    serializer_class = BookSeriazlier
+    serializer_class = BookDetailSerializer
+    # i have no fucking clue why IsAuthor permission works here
     permission_classes = [IsAuthor]
     parser_classes = [MultiPartParser, FormParser]
+
+    def get(self, request, *args, **kwargs):
+        # pprint.pprint(self.__dict__)
+        return super().get(request, *args, **kwargs)

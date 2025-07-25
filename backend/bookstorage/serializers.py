@@ -1,3 +1,4 @@
+from django.http import HttpResponse
 from rest_framework import serializers
 
 from .handlers import EpubHandler
@@ -45,6 +46,12 @@ class BookSeriazlier(serializers.ModelSerializer):
             validated_data.update(handled_data)
 
         return super().create(validated_data)
+
+
+class BookDetailSerializer(BookSeriazlier):
+    class Meta:
+        model = Book
+        fields = "__all__"
 
 
 class BookUserSerializer(BookSeriazlier):
